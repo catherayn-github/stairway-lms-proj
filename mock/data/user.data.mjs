@@ -4,7 +4,7 @@ const roles = ["Admin", "Student", "Instructor", "Contact Person"];
 
 const users_data = [
   {
-    id: 1,
+    id: "1",
     first_name: "admin",
     last_name: "admin",
     added_by: "admin admin",
@@ -16,7 +16,7 @@ const users_data = [
 
 for (let i = 2; i <= 5; i++) {
   users_data.push({
-    id: i,
+    id: i.toString(),
     first_name: faker.person.firstName(),
     last_name: faker.person.lastName(),
     email: faker.internet.email(),

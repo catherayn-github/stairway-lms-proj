@@ -10,17 +10,19 @@ import { formatErrorMessage } from "@app/_utils";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const userService = new UserService();
-/**
- * DOCU: Fetch all inventory records
- * @returns Query object with list of inventories
- * @author Catherine
- * Last updated date: August 26, 2025
- */
+
 export const useGetUsers = () => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: [...CACHE_KEY_USER],
-    queryFn: () => userService.getUsers(),
+    queryFn: ( {pageParam = 1 }) => userService.getUsers({ page: pageParam, limit: 10 }),
   });
+};
+
+export const useGetUser = ({ id }: Pick<User, "id">) => {
+	return useQuery({
+		queryKey: [...CACHE_KEY_USER, id],
+		queryFn: () => userService.getUser({ id }),
+	});
 };
 
 export const useAddUser = ({

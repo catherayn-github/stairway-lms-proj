@@ -5,6 +5,7 @@ import "@app/_styles/globals.css";
 /* FONTS */
 import { Figtree } from "next/font/google";
 import Providers from "./_providers";
+import Toaster from "./_components/Toast";
 
 const figtree = Figtree({
   subsets: ["latin"],
@@ -20,7 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={figtree.className}>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );

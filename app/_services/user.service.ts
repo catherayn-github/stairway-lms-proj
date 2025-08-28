@@ -13,10 +13,30 @@ class UserService extends APIClient {
    * @author Catherine
    * Last updated date: August 19, 2025
    */
-  getUsers = async () => {
+ 
+ getUsers = async ({ page = 1, limit = 50 }) => {
+  try {
+    const res = await this.get<User[]>(`/`, {
+      // if using axios, params go here
+      params: { page, limit },
+    });
+
+    if (res.error) throw res.error;
+
+    // expect backend to return { result: User[], nextPage }
+    return res.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+  getUser = async ({ id }: Pick<User, "id">) => {
     try {
-      const res = await this.get<User[]>(`/`);
-      if (res.error) throw res.error;
+      const res = await this.get<User>(`/${id}`);
+      if (res.error) {
+        throw res.error;
+      }
       return res?.result;
     } catch (error) {
       throw error;

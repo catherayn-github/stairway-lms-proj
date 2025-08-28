@@ -1,4 +1,4 @@
-import { Button } from "@app/_components/ui/button";
+"use client";
 import {
   DialogHeader,
   DialogFooter,
@@ -6,25 +6,87 @@ import {
   DialogTrigger,
   DialogContent,
   DialogTitle,
-  DialogDescription,
   DialogClose,
 } from "@app/_components/ui/dialog";
 
-import { Pencil, User } from "lucide-react";
-import React from "react";
-import UserForm from "./UserForm";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@app/_components/ui/select";
+import { Pencil } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@app/_components/ui/select";
+import useUserStore from "@app/_stores/useUserStore";
+import { Input } from "@app/_components/ui/input";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useParams } from "next/navigation";
+import { useEditUser, useGetUser } from "@app/_hooks/user.hook";
+import { User } from "@app/_entities/interface/user.interface";
+import { EditUserData } from "@app/_entities/types/user.type";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { edit_user_schema } from "@app/_schema/user.schema";
+import toast from "react-hot-toast";
+import { RoleType } from "@app/_entities/enum/role.enum";
 
-const EditUserButton = () => {
+interface Props {
+  user: User;
+}
+const EditUserButton = ({ user }: Props) => {
   const user_roles = [
-    { label: "All", value: "all" },
-    { label: "Admin", value: "admin" },
-    { label: "Student", value: "student" },
-    { label: "Instructor", value: "instructor" },
-    { label: "Contact Person", value: "contact_person" },
+    { label: "All", value: "All" },
+    { label: "Admin", value: "Admin" },
+    { label: "Student", value: "Student" },
+    { label: "Instructor", value: "Instructor" },
+    { label: "Contact Person", value: "Contact Person" },
   ];
+
+  const [is_edit_user_modal_open, setEditUserModal] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset,
+  } = useForm<EditUserData>({
+    resolver: zodResolver(edit_user_schema),
+  });
+  const { editUser } = useEditUser({
+    onSuccess() {
+      setEditUserModal(false);
+      toast.success("User edited successfully");
+      reset();
+    },
+    onError(error) {
+      toast.error(error);
+    },
+  });
+
+  // const { data } = useGetUser({ id: user.id });
+
+  const onSubmit: SubmitHandler<EditUserData> = (data) => {
+   console.log(user.id);
+   console.log(typeof(user.id));
+    editUser({ data });
+  };
+
+  useEffect(() => {
+    reset(user);
+  }, [reset, user]);
+
   return (
-    <Dialog>
+    <Dialog
+      open={is_edit_user_modal_open}
+      onOpenChange={(open) => {
+        setEditUserModal(open);
+        if (!open) {
+          reset(user);
+        }
+      }}
+    >
       <DialogTrigger asChild>
         <Pencil
           strokeWidth={2.75}
@@ -38,8 +100,12 @@ const EditUserButton = () => {
             Edit User
           </DialogTitle>
         </DialogHeader>
-        <form className="flex flex-col">
-          <div className="flex gap-[2.4rem] px-[3.2rem] pt-[3.2] pb-[2.4rem]">
+        <form
+          className="flex flex-col"
+          onSubmit={handleSubmit(onSubmit)}
+          id="edit_user_form"
+        >
+          <div className="flex gap-[2.4rem] px-[3.2rem] pt-[3.2rem] pb-[2.4rem]">
             <div className="flex flex-col gap-[1.6rem]">
               <label
                 htmlFor="firstName"
@@ -49,9 +115,9 @@ const EditUserButton = () => {
                 <span className="text-[#D83A52] text-[1.6rem]">*</span>
               </label>
 
-              <input
-                id="firstName"
-                type="text"
+              <Input
+                {...register("first_name")}
+                error={errors.first_name?.message}
                 placeholder="First Name"
                 className="border border-[#BBCBD5] rounded-[0.8rem] px-[1.6rem] py-[1.1rem]"
               />
@@ -63,9 +129,9 @@ const EditUserButton = () => {
                 <span className="text-[#D83A52] text-[1.6rem]">*</span>
               </label>
 
-              <input
-                id="lasttName"
-                type="text"
+              <Input
+                {...register("last_name")}
+                error={errors.last_name?.message}
                 placeholder="Last Name"
                 className="border border-[#BBCBD5] rounded-[0.8rem] px-[1.6rem] py-[1.1rem]"
               />
@@ -75,27 +141,36 @@ const EditUserButton = () => {
               <label htmlFor="access">
                 Access <span className="text-[#D83A52] text-[1.6rem]">*</span>
               </label>
-              <Select>
-                <SelectTrigger className="text-[#595959]">
-                  <SelectValue placeholder="All Users" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {user_roles.map((role) => (
-                      <SelectItem
-                        key={role.value}
-                        value={role.value}
-                        className="text-[#595959] text-[1.6rem]"
-                      >
-                        {role.label}
-                        {/* {selected === role.value && (
-                      <Check className="h-4 w-4 text-green-600" />
-                    )} */}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <Controller
+                control={control}
+                name="role"
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="text-[#595959]">
+                      <SelectValue placeholder="All Users" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {user_roles.map((role) => (
+                          <SelectItem
+                            key={role.value}
+                            value={role.value as RoleType}
+                            className="text-[#595959] text-[1.6rem]"
+                          >
+                            {role.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+
+              {errors.role && (
+                <p className="text-destructive mt-1 text-sm">
+                  {errors.role.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -104,26 +179,31 @@ const EditUserButton = () => {
               Email<span className="text-[#D83A52] text-[1.6rem]">*</span>
             </label>
 
-            <input
-              id="firstName"
-              type="text"
+            <Input
+              {...register("email")}
+              error={errors.email?.message}
               placeholder="Type email here..."
               className="border border-[#BBCBD5] rounded-[0.8rem] px-[1.6rem] py-[1.1rem]"
             />
           </div>
-
-          <DialogFooter className="bg-[#E7F5FF] p-[3.2rem] gap-[2.4rem] rounded-b-[2.4rem]">
-            <DialogClose className="text-[#1E76EC] text-[1.6rem]">
-              Cancel
-            </DialogClose>
-            <button
-              type="submit"
-              className="rounded-[0.8rem] bg-[#1E76EC] px-[5.45rem] py-[1.85rem] text-[#FDFDFD] font-bold text-[1.6rem]"
-            >
-              Update
-            </button>
-          </DialogFooter>
+          
         </form>
+        <DialogFooter className="bg-[#E7F5FF] p-[3.2rem] gap-[2.4rem] rounded-b-[2.4rem]">
+          <button
+            type="button"
+            className="text-[#1E76EC] text-[1.6rem]"
+            onClick={() => setEditUserModal(false)}
+          >
+            Cancel
+          </button>
+          <button
+            form="edit_user_form"
+            type="submit"
+            className="rounded-[0.8rem] bg-[#1E76EC] px-[5.45rem] py-[1.85rem] text-[#FDFDFD] font-bold text-[1.6rem]"
+          >
+            Update
+          </button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

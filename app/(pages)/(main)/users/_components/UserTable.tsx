@@ -47,8 +47,8 @@ const UserTable = () => {
                 })}
               </td>
               <td className="hidden group-hover:flex gap-[0.8rem] p-[1.6rem] ">
-                <EditUserButton />
-                <DeleteUserButton />
+                <EditUserButton user={user} />
+                <DeleteUserButton user={user}/>
               </td>
             </tr>
           ))}
