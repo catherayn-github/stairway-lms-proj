@@ -3,6 +3,7 @@ import jsonServer from "json-server";
 
 // Import custom route handlers for users
 import userRoutes from "./routes/user.route.mjs";
+import authRoutes from "./routes/auth.route.mjs";
 
 // Create a new JSON Server instance
 const server = jsonServer.create();
@@ -38,6 +39,7 @@ server.use((req, res, next) => {
 /* ROUTES */
 // Register user-related routes from the imported module
 userRoutes(server);
+authRoutes(server);
 
 // Start the server and listen on the specified port
 server.listen(PORT, () => {

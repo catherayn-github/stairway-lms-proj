@@ -1,4 +1,7 @@
+/* REACT / HOOKS */
 import React from "react";
+
+/* COMPONENTS */
 import {
   Select,
   SelectContent,
@@ -7,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@app/_components/ui/select";
+
 const UserForm = () => {
      const user_roles = [
     { label: "All", value: "all" },

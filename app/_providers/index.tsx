@@ -4,12 +4,15 @@ import { PropsWithChildren } from "react";
 import QueryClientProvider from "@app/_providers/QueryClientProvider";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
+
 const Providers = ({ children }: PropsWithChildren) => {
-	return (
-		<QueryClientProvider>
-			<NuqsAdapter>{children}</NuqsAdapter>
-		</QueryClientProvider>
-	);
+  return (
+    
+      <QueryClientProvider>
+        <NuqsAdapter>{children}</NuqsAdapter>
+      </QueryClientProvider>
+  
+  );
 };
 
 export default Providers;

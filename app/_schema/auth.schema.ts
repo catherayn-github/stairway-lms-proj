@@ -5,3 +5,4 @@ export const login_schema = z.object({
 	email_address: z.string(),
 	password: z.string(),
 });
+export type LoginFormData = z.infer<typeof login_schema>;

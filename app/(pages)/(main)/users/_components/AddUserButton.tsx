@@ -1,11 +1,17 @@
 "use client";
-import { Button } from "@app/_components/ui/button";
+/* PLUGINS */
+import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
+
+/* REACT / HOOKS */
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+
+/* COMPONENTS */
 import {
+  Dialog,
   DialogHeader,
   DialogFooter,
   DialogTrigger,
-  Dialog,
-  DialogDescription,
   DialogContent,
   DialogTitle,
   DialogClose,
@@ -19,21 +25,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@app/_components/ui/select";
-import { AddUserData } from "@app/_entities/types/user.type";
+
+/* HOOKS */
 import { useAddUser } from "@app/_hooks/user.hook";
-import { add_user_schema } from "@app/_schema/user.schema";
+
+/* STORES */
 import useUserStore from "@app/_stores/useUserStore";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import toast from "react-hot-toast";
+/* ENTITIES / TYPES */
+import { AddUserData } from "@app/_entities/types/user.type";
+
+/* SCHEMAS */
+import { add_user_schema } from "@app/_schema/user.schema";
+
 
 const AddUserButton = () => {
   const is_add_user_modal_open = useUserStore.use.is_add_user_modal_open();
   const setAddUserModal = useUserStore.use.setAddUserModal();
 
   const user_roles = [
-    { label: "All", value: "All" },
     { label: "Admin", value: "Admin" },
     { label: "Student", value: "Student" },
     { label: "Instructor", value: "Instructor" },
@@ -134,7 +144,7 @@ const AddUserButton = () => {
                 render={({ field }) => (
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className="text-[#595959]">
-                      <SelectValue placeholder="All Users" />
+                      <SelectValue placeholder="Select Access" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
@@ -170,7 +180,7 @@ const AddUserButton = () => {
               {...register("email")}
               error={errors.email?.message}
               placeholder="Type email here..."
-              className="border border-[#BBCBD5] rounded-[0.8rem] px-[1.6rem] py-[1.1rem]"
+              className="border border-[#BBCBD5] rounded-[0.8rem] px-[1.6rem] py-[1.1rem] w-full"
             />
           </div>
         </form>

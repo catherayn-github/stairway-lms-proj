@@ -1,3 +1,10 @@
+/* PLUGINS */
+import toast from "react-hot-toast";
+
+/* REACT / HOOKS */
+import { useState } from "react";
+
+/* COMPONENTS */
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,12 +16,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@app/_components/ui/alert-dialog";
-import { Button } from "@app/_components/ui/button";
-import { useDeleteUser } from "@app/_hooks/user.hook";
+
+/* ICONS */
 import { Trash, X } from "lucide-react";
-import { User } from "next-auth";
-import React, { useState } from "react";
-import toast from "react-hot-toast";
+
+/* ENTITIES / TYPES */
+import { User } from "@app/_entities/interface/user.interface";
+
+/* HOOKS */
+import { useDeleteUser } from "@app/_hooks/user.hook";
+
 
 interface Props {
   user : User
@@ -39,7 +50,7 @@ const DeleteUserButton = ({user} : Props) => {
     >
       <AlertDialogTrigger asChild>
         <Trash
-          strokeWidth={2.75}
+          strokeWidth={1.75}
           className="p-[0.3rem] cursor-pointer"
           color="#595959"
         />

@@ -1,31 +1,41 @@
+"use client";
+
+/* REACT */
+import React from "react";
+
+/* COMPONENTS */
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@app/_components/ui/select";
 import { Separator } from "@app/components/ui/separator";
-
-import React from "react";
 import AddUserButton from "./AddUserButton";
+
+/* HOOKS */
+import { useUserFilters } from "@app/_hooks/user.hook";
+
 
 const UserHeader = () => {
   const user_roles = [
-    { label: "All", value: "all" },
-    { label: "Admin", value: "admin" },
-    { label: "Student", value: "student" },
-    { label: "Instructor", value: "instructor" },
-    { label: "Contact Person", value: "contact_person" },
+    { label: "All", value: "All" },
+    { label: "Admin", value: "Admin" },
+    { label: "Student", value: "Student" },
+    { label: "Instructor", value: "Instructor" },
+    { label: "Contact Person", value: "Contact Person" },
   ];
+
+  const [{role}, setRoleFilter] = useUserFilters();
+
   return (
     <div className="flex justify-between">
       <h2 className="text-[#303030] text-[1.8rem] font-bold py-[1.75rem]">Users</h2>
 
       <div className="flex items-center gap-[1.6rem]">
-        <Select>
+        <Select value={role || "All"} onValueChange={(value) => setRoleFilter({role: value === "All" ? null: value})}>
           <SelectTrigger  className="text-[#595959]">
             <SelectValue placeholder="All Users" />
           </SelectTrigger>
@@ -38,9 +48,7 @@ const UserHeader = () => {
                   className="text-[#595959] text-[1.6rem]"
                 >
                   {role.label}
-                  {/* {selected === role.value && (
-                      <Check className="h-4 w-4 text-green-600" />
-                    )} */}
+                
                 </SelectItem>
               ))}
             </SelectGroup>

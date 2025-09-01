@@ -1,16 +1,22 @@
 "use client";
+/* PLUGINS */
+import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
+
+/* REACT / HOOKS */
+import React, { useEffect, useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+
+/* COMPONENTS */
 import {
+  Dialog,
   DialogHeader,
   DialogFooter,
-  Dialog,
   DialogTrigger,
   DialogContent,
   DialogTitle,
-  DialogClose,
 } from "@app/_components/ui/dialog";
-
 import { Pencil } from "lucide-react";
-import React, { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -19,24 +25,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@app/_components/ui/select";
-import useUserStore from "@app/_stores/useUserStore";
 import { Input } from "@app/_components/ui/input";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { useParams } from "next/navigation";
-import { useEditUser, useGetUser } from "@app/_hooks/user.hook";
+
+/* HOOKS */
+import { useEditUser } from "@app/_hooks/user.hook";
+
+/* ENTITIES / TYPES */
 import { User } from "@app/_entities/interface/user.interface";
 import { EditUserData } from "@app/_entities/types/user.type";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { edit_user_schema } from "@app/_schema/user.schema";
-import toast from "react-hot-toast";
 import { RoleType } from "@app/_entities/enum/role.enum";
+
+/* SCHEMAS */
+import { edit_user_schema } from "@app/_schema/user.schema";
 
 interface Props {
   user: User;
 }
 const EditUserButton = ({ user }: Props) => {
   const user_roles = [
-    { label: "All", value: "All" },
     { label: "Admin", value: "Admin" },
     { label: "Student", value: "Student" },
     { label: "Instructor", value: "Instructor" },
@@ -65,11 +71,7 @@ const EditUserButton = ({ user }: Props) => {
     },
   });
 
-  // const { data } = useGetUser({ id: user.id });
-
   const onSubmit: SubmitHandler<EditUserData> = (data) => {
-   console.log(user.id);
-   console.log(typeof(user.id));
     editUser({ data });
   };
 
@@ -89,7 +91,7 @@ const EditUserButton = ({ user }: Props) => {
     >
       <DialogTrigger asChild>
         <Pencil
-          strokeWidth={2.75}
+          strokeWidth={1.75}
           className="p-[0.3rem] cursor-pointer"
           color="#595959"
         />
@@ -147,7 +149,7 @@ const EditUserButton = ({ user }: Props) => {
                 render={({ field }) => (
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className="text-[#595959]">
-                      <SelectValue placeholder="All Users" />
+                      <SelectValue placeholder="Select Access" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
@@ -183,10 +185,9 @@ const EditUserButton = ({ user }: Props) => {
               {...register("email")}
               error={errors.email?.message}
               placeholder="Type email here..."
-              className="border border-[#BBCBD5] rounded-[0.8rem] px-[1.6rem] py-[1.1rem]"
+              className="border border-[#BBCBD5] rounded-[0.8rem] px-[1.6rem] py-[1.1rem] w-full"
             />
           </div>
-          
         </form>
         <DialogFooter className="bg-[#E7F5FF] p-[3.2rem] gap-[2.4rem] rounded-b-[2.4rem]">
           <button

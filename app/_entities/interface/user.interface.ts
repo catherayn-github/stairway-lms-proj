@@ -9,3 +9,9 @@ export interface User {
     added_by : string;
     date_added : string;
 }
+
+export interface UsersPage {
+    result : User[];
+    nextPage ?: number;
+    total : number;
+}
