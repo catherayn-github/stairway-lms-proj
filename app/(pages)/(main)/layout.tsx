@@ -5,18 +5,18 @@ import React, { PropsWithChildren } from "react";
 /* COMPONENTS */
 
 const Layout = ({ children }: PropsWithChildren) => {
-  
-  return (
-    <div className="flex h-screen ">
-      <SideBar />
+    return (
+        <div className="flex h-screen overflow-hidden">
+            <SideBar />
 
-      <div className="flex-1 flex flex-col ">
-        <Header />
-
-        <main className="flex-1 overflow-auto p-[2.4rem]">{children}</main>
-      </div>
-    </div>
-  );
+            <div className="flex-1 flex flex-col ">
+                <Header />
+                <main className="flex-1 overflow-hidden p-[2.4rem]">
+                    {children}
+                </main>
+            </div>
+        </div>
+    );
 };
 
 export default Layout;
