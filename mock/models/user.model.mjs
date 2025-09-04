@@ -7,7 +7,7 @@ let current_id = users_data.length;
  * @param {number} limit - Number of users per page
  * @param {string} [search] - Optional search term for first or last name
  * @param {string} [role] - Optional role filter
- * @param {"asc"|"desc"} [sortName="asc"] - Sort by last name
+ * @param {"asc"|"desc"} [sort_name="asc"] - Sort by last name
  * @param {"asc"|"desc"} [sortDateAdded] - Sort by date added
  * @param {"asc"|"desc"} [sortAddedBy] - Sort by added by
  * @param {"asc"|"desc"} [sortAccess] - Sort by role/access
@@ -17,73 +17,69 @@ let current_id = users_data.length;
  * @trigger API endpoint: GET /api/users
  */
 export const getUsers = (
-  page,
-  limit,
-  search,
-  role,
-  sortName = "asc",
-  sortDateAdded,
-  sortAddedBy,
-  sortAccess
+    page,
+    limit,
+    search,
+    role,
+    sort_name = "asc",
+    sort_date_added,
+    sort_added_by,
+    sort_access
 ) => {
-  let filtered = [...users_data];
+    let filtered = [...users_data];
 
- 
-  if (search) {
-    const searchLower = search.toLowerCase();
-    filtered = filtered.filter(
-      (user) =>
-        user.first_name.toLowerCase().includes(searchLower) ||
-        user.last_name.toLowerCase().includes(searchLower)
-    );
-  }
+    if (search) {
+        const searchLower = search.toLowerCase();
+        filtered = filtered.filter(
+            (user) =>
+                user.first_name.toLowerCase().includes(searchLower) ||
+                user.last_name.toLowerCase().includes(searchLower)
+        );
+    }
 
- 
- if (role) {
-    filtered = filtered.filter((user) => user.role === role);
-  }
+    if (role) {
+        filtered = filtered.filter((user) => user.role === role);
+    }
 
+    if (sort_name) {
+        filtered.sort((a, b) =>
+            sort_name === "asc"
+                ? a.last_name.localeCompare(b.last_name)
+                : b.last_name.localeCompare(a.last_name)
+        );
+    }
 
-  if (sortName) {
-    filtered.sort((a, b) =>
-      sortName === "asc"
-        ? a.last_name.localeCompare(b.last_name)
-        : b.last_name.localeCompare(a.last_name)
-    );
-  }
+    if (sort_date_added) {
+        filtered.sort((a, b) =>
+            sort_date_added === "asc"
+                ? new Date(a.date_added) - new Date(b.date_added)
+                : new Date(b.date_added) - new Date(a.date_added)
+        );
+    }
 
-  if (sortDateAdded) {
-    filtered.sort((a, b) =>
-      sortDateAdded === "asc"
-        ? new Date(a.date_added) - new Date(b.date_added)
-        : new Date(b.date_added) - new Date(a.date_added)
-    );
-  }
+    if (sort_added_by) {
+        filtered.sort((a, b) =>
+            sort_added_by === "asc"
+                ? a.added_by.localeCompare(b.added_by)
+                : b.added_by.localeCompare(a.added_by)
+        );
+    }
 
-  if (sortAddedBy) {
-    filtered.sort((a, b) =>
-      sortAddedBy === "asc"
-        ? a.added_by.localeCompare(b.added_by)
-        : b.added_by.localeCompare(a.added_by)
-    );
-  }
+    if (sort_access) {
+        filtered.sort((a, b) =>
+            sort_access === "asc"
+                ? a.role.localeCompare(b.role)
+                : b.role.localeCompare(a.role)
+        );
+    }
 
-  if (sortAccess) {
-    filtered.sort((a, b) =>
-      sortAccess === "asc"
-        ? a.role.localeCompare(b.role)
-        : b.role.localeCompare(a.role)
-    );
-  }
+    const start = (page - 1) * limit;
+    const end = start + limit;
 
- 
-  const start = (page - 1) * limit;
-  const end = start + limit;
-
-  return {
-    data: filtered.slice(start, end),
-    totalCount: filtered.length,
-  };
+    return {
+        data: filtered.slice(start, end),
+        totalCount: filtered.length,
+    };
 };
 
 /**
@@ -99,19 +95,19 @@ export const getUsers = (
  * @trigger API endpoint: POST /api/users
  */
 export const addUser = ({ first_name, last_name, role, email }) => {
-  const newUser = {
-    id: (++current_id).toString(),
-    first_name,
-    last_name,
-    role,
-    email,
-    added_by: "Admin Admin",
-    date_added: new Date().toISOString().split("T")[0],
-  };
+    const newUser = {
+        id: (++current_id).toString(),
+        first_name,
+        last_name,
+        role,
+        email,
+        added_by: "Admin Admin",
+        date_added: new Date().toISOString().split("T")[0],
+    };
 
-  users_data.push(newUser);
+    users_data.push(newUser);
 
-  return newUser;
+    return newUser;
 };
 
 /**
@@ -129,24 +125,23 @@ export const addUser = ({ first_name, last_name, role, email }) => {
  * @trigger API endpoint: PUT /api/users/:id
  */
 export const updateUser = ({
-  id,
-  data: { first_name, last_name, role, email },
+    id,
+    data: { first_name, last_name, role, email },
 }) => {
-  
-  const user_index = users_data.findIndex((user) => {;
+    const user_index = users_data.findIndex((user) => {
+        return user.id === id;
+    });
+    if (user_index === -1) return undefined;
 
-    return user.id === id} );
-  if (user_index === -1) return undefined;
+    users_data[user_index] = {
+        ...users_data[user_index],
+        first_name,
+        last_name,
+        role,
+        email,
+    };
 
-  users_data[user_index] = {
-    ...users_data[user_index],
-    first_name,
-    last_name,
-    role,
-    email,
-  };
-
-  return users_data[user_index];
+    return users_data[user_index];
 };
 
 /**
@@ -158,9 +153,9 @@ export const updateUser = ({
  * @trigger API endpoint: DELETE /api/users/:id
  */
 export const deleteUser = (id) => {
-  const user_index = users_data.findIndex((user) => user.id === id);
-  if (user_index === -1) return undefined;
+    const user_index = users_data.findIndex((user) => user.id === id);
+    if (user_index === -1) return undefined;
 
-  const deletedUser = users_data.splice(user_index, 1);
-  return deletedUser[0];
+    const deletedUser = users_data.splice(user_index, 1);
+    return deletedUser[0];
 };

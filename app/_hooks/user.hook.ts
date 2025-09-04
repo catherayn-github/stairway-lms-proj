@@ -1,11 +1,20 @@
 /* PLUGINS */
-import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+    useInfiniteQuery,
+    useMutation,
+    useQueryClient,
+} from "@tanstack/react-query";
 import { useQueryStates } from "nuqs";
 
 /* ENTITIES */
 import { User, UsersPage } from "@app/_entities/interface/user.interface";
 import { HookCallbacks } from "@app/_entities/interface/api.interface";
-import { AddUserData, EditUserData, UserFiltersType } from "@app/_entities/types/user.type";
+import {
+    AddUserData,
+    EditUserData,
+    UpdateUserRoleData,
+    UserFiltersType,
+} from "@app/_entities/types/user.type";
 
 /* SERVICES */
 import UserService from "@app/_services/user.service";
@@ -27,7 +36,7 @@ const userService = new UserService();
  */
 
 export const useUserFilters = () => {
-  return useQueryStates(UserFilters);
+    return useQueryStates(UserFilters);
 };
 
 /**
@@ -39,14 +48,14 @@ export const useUserFilters = () => {
  * Last updated date: August 27, 2025
  */
 export const useGetUsers = ({ filters }: { filters: UserFiltersType }) => {
-  return useInfiniteQuery<UsersPage, Error>({
-    queryKey: [...CACHE_KEY_USER, filters],
-    queryFn: ({ pageParam = 1 }) =>
-      userService.getUsers({ page: pageParam, filters }),
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.nextPage ? allPages.length + 1 : undefined;
-    },
-  });
+    return useInfiniteQuery<UsersPage, Error>({
+        queryKey: [...CACHE_KEY_USER, filters],
+        queryFn: ({ pageParam = 1 }) =>
+            userService.getUsers({ page: pageParam, filters }),
+        getNextPageParam: (lastPage, allPages) => {
+            return lastPage.nextPage ? allPages.length + 1 : undefined;
+        },
+    });
 };
 
 /**
@@ -57,24 +66,24 @@ export const useGetUsers = ({ filters }: { filters: UserFiltersType }) => {
  * Last updated date: August 27, 2025
  */
 export const useAddUser = ({
-  onSuccess,
-  onError,
+    onSuccess,
+    onError,
 }: HookCallbacks<User> = {}) => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const { mutate: addUser, ...rest } = useMutation({
-    mutationFn: ({ data }: { data: AddUserData }) =>
-      userService.addUser({ data }),
-    onSuccess(data) {
-      onSuccess?.(data!);
-      queryClient.invalidateQueries({ queryKey: CACHE_KEY_USER });
-    },
-    onError(error) {
-      onError?.(formatErrorMessage(error));
-    },
-  });
+    const { mutate: addUser, ...rest } = useMutation({
+        mutationFn: ({ data }: { data: AddUserData }) =>
+            userService.addUser({ data }),
+        onSuccess(data) {
+            onSuccess?.(data!);
+            queryClient.invalidateQueries({ queryKey: CACHE_KEY_USER });
+        },
+        onError(error) {
+            onError?.(formatErrorMessage(error));
+        },
+    });
 
-  return { addUser, ...rest };
+    return { addUser, ...rest };
 };
 
 /**
@@ -85,24 +94,24 @@ export const useAddUser = ({
  * Last updated date: August 27, 2025
  */
 export const useEditUser = ({
-  onSuccess,
-  onError,
+    onSuccess,
+    onError,
 }: HookCallbacks<User> = {}) => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const { mutate: editUser, ...rest } = useMutation({
-    mutationFn: ({ data }: { data: EditUserData }) =>
-      userService.editUser({ data }),
-    onSuccess(data) {
-      onSuccess?.(data!);
-      queryClient.invalidateQueries({ queryKey: CACHE_KEY_USER });
-    },
-    onError(error) {
-      onError?.(formatErrorMessage(error));
-    },
-  });
+    const { mutate: editUser, ...rest } = useMutation({
+        mutationFn: ({ data }: { data: EditUserData | UpdateUserRoleData }) =>
+            userService.editUser({ data }),
+        onSuccess(data) {
+            onSuccess?.(data!);
+            queryClient.invalidateQueries({ queryKey: CACHE_KEY_USER });
+        },
+        onError(error) {
+            onError?.(formatErrorMessage(error));
+        },
+    });
 
-  return { editUser, ...rest };
+    return { editUser, ...rest };
 };
 
 /**
@@ -113,21 +122,21 @@ export const useEditUser = ({
  * Last updated date: August 27, 2025
  */
 export const useDeleteUser = ({
-  onSuccess,
-  onError,
+    onSuccess,
+    onError,
 }: HookCallbacks<Pick<User, "id">> = {}) => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const { mutate: deleteUser, ...rest } = useMutation({
-    mutationFn: ({ id }: { id: string }) => userService.deleteUser({ id }),
-    onSuccess(data) {
-      onSuccess?.(data!);
-      queryClient.invalidateQueries({ queryKey: CACHE_KEY_USER });
-    },
-    onError(error) {
-      onError?.(formatErrorMessage(error));
-    },
-  });
+    const { mutate: deleteUser, ...rest } = useMutation({
+        mutationFn: ({ id }: { id: string }) => userService.deleteUser({ id }),
+        onSuccess(data) {
+            onSuccess?.(data!);
+            queryClient.invalidateQueries({ queryKey: CACHE_KEY_USER });
+        },
+        onError(error) {
+            onError?.(formatErrorMessage(error));
+        },
+    });
 
-  return { deleteUser, ...rest };
+    return { deleteUser, ...rest };
 };

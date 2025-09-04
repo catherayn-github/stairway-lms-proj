@@ -16,12 +16,9 @@ const Header = () => {
     const [search_input, setSearchInput] = useState(search);
 
     return (
-        <header className="flex justify-between items-center py-[1.6rem] px-[2.4rem] bg-[#FDFDFD] border-b-[0.1rem] border-[#BBCBD5]">
+        <header className="flex justify-between items-center py-[1.6rem] px-[2.4rem] bg-fill-primary-white border-b-[0.1rem] border-stroke-gray">
             <div className="relative">
-                <Search
-                    className="absolute top-1/2 left-[1.6rem] -translate-y-1/2 w-[2.4rem] h-[2.4rem] mr-[0.8rem]"
-                    color="#BCC7CF"
-                />
+                <Search className="absolute top-1/2 left-[1.6rem] -translate-y-1/2 w-[2.4rem] h-[2.4rem] mr-[0.8rem] stroke-icon-default-gray" />
                 <Input
                     id="search_user"
                     type="text"
@@ -31,15 +28,12 @@ const Header = () => {
                         debounced(event.target.value);
                         setSearchInput(event.target.value);
                     }}
-                    className="rounded-[0.8rem] text-[1.6rem] border-[0.1rem] border-[#BBCBD5] pl-[4.8rem] py-[0.8rem] min-w-[30rem] placeholder-[#B1B1B1]"
+                    className="rounded-[0.8rem] text-[1.6rem] border-[0.1rem] border-stroke-gray pl-[4.8rem] py-[0.8rem] min-w-[30rem] placeholder-[#B1B1B1]"
                 />
             </div>
 
             <div className="flex gap-[1.6rem]">
-                <Bell
-                    color="#595959"
-                    className="top-1/2 my-[0.8rem] cursor-pointer"
-                />
+                <Bell className="top-1/2 my-[0.8rem] cursor-pointer stroke-icon-default-black" />
                 <AvatarDropdown />
             </div>
         </header>

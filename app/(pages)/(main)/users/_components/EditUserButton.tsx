@@ -37,18 +37,13 @@ import { RoleType } from "@app/_entities/enum/role.enum";
 
 /* SCHEMAS */
 import { edit_user_schema } from "@app/_schema/user.schema";
+import { Button } from "@app/_components/ui/button";
+import { selectRoleOptions } from "@app/_constants/select_options";
 
 interface Props {
     user: User;
 }
 const EditUserButton = ({ user }: Props) => {
-    const user_roles = [
-        { label: "Admin", value: "Admin" },
-        { label: "Student", value: "Student" },
-        { label: "Instructor", value: "Instructor" },
-        { label: "Contact Person", value: "Contact Person" },
-    ];
-
     const [is_edit_user_modal_open, setEditUserModal] = useState(false);
 
     const {
@@ -92,13 +87,12 @@ const EditUserButton = ({ user }: Props) => {
             <DialogTrigger asChild>
                 <Pencil
                     strokeWidth={1.75}
-                    className="p-[0.3rem] cursor-pointer"
-                    color="#595959"
+                    className="p-[0.3rem] cursor-pointer stroke-icon-default-black"
                 />
             </DialogTrigger>
             <DialogContent className="rounded-[2.4rem] min-w-[60rem]  ">
-                <DialogHeader className="border-b border-[#BBCBD5] px-[3.2rem] py-[2.4rem]">
-                    <DialogTitle className="text-[1.8rem] text-[#303030]">
+                <DialogHeader className="border-b border-stroke-gray px-[3.2rem] py-[2.4rem]">
+                    <DialogTitle className="text-[1.8rem] text-text-primary-black">
                         Edit User
                     </DialogTitle>
                 </DialogHeader>
@@ -111,10 +105,10 @@ const EditUserButton = ({ user }: Props) => {
                         <div className="flex flex-col gap-[1.6rem] min-w-[1rem]">
                             <label
                                 htmlFor="firstName"
-                                className="text-[#616161] text-[1.6rem]"
+                                className="text-text-subtext-gray text-[1.6rem]"
                             >
                                 First Name
-                                <span className="text-[#D83A52] text-[1.6rem]">
+                                <span className="text-status-error-red text-[1.6rem]">
                                     *
                                 </span>
                             </label>
@@ -130,10 +124,10 @@ const EditUserButton = ({ user }: Props) => {
                         <div className="flex flex-col gap-[1.6rem] min-w-[15.1rem]">
                             <label
                                 htmlFor="lastName"
-                                className="text-[#616161] text-[1.6rem]"
+                                className="text-text-subtext-gray text-[1.6rem]"
                             >
                                 Last Name
-                                <span className="text-[#D83A52]">*</span>
+                                <span className="text-status-error-red">*</span>
                             </label>
 
                             <Input
@@ -147,10 +141,10 @@ const EditUserButton = ({ user }: Props) => {
                         <div className="flex flex-col gap-[1.6rem]  ">
                             <label
                                 htmlFor="access"
-                                className="text-[#616161] text-[1.6rem]"
+                                className="text-text-subtext-gray text-[1.6rem]"
                             >
                                 Access{" "}
-                                <span className="text-[#D83A52] text-[1.6rem]">
+                                <span className="text-status-error-red text-[1.6rem]">
                                     *
                                 </span>
                             </label>
@@ -165,27 +159,27 @@ const EditUserButton = ({ user }: Props) => {
                                         <div
                                             className={`border rounded-[0.8rem] ${
                                                 errors.role
-                                                    ? "border-[#D83A52]"
-                                                    : "border-[#BBCBD5]"
+                                                    ? "border-status-error-red"
+                                                    : "border-stroke-gray"
                                             } `}
                                         >
-                                            <SelectTrigger className="px-[1.6rem] py-[1.1rem] min-w-[18.5rem] text-[#595959] gap-[2.7rem]">
+                                            <SelectTrigger className="px-[1.6rem] py-[1.1rem] min-w-[18.5rem] text-icon-default-black gap-[2.7rem]">
                                                 <SelectValue placeholder="Select Access" />
                                             </SelectTrigger>
                                         </div>
                                         <SelectContent>
                                             <SelectGroup>
-                                                {user_roles.map((role) => (
-                                                    <SelectItem
-                                                        key={role.value}
-                                                        value={
-                                                            role.value as RoleType
-                                                        }
-                                                        className="text-[#595959] text-[1.6rem]"
-                                                    >
-                                                        {role.label}
-                                                    </SelectItem>
-                                                ))}
+                                                {selectRoleOptions.map(
+                                                    (role) => (
+                                                        <SelectItem
+                                                            key={role}
+                                                            value={role}
+                                                            className="text-icon-default-black text-[1.6rem]"
+                                                        >
+                                                            {role}
+                                                        </SelectItem>
+                                                    )
+                                                )}
                                             </SelectGroup>
                                         </SelectContent>
                                     </Select>
@@ -193,7 +187,7 @@ const EditUserButton = ({ user }: Props) => {
                             />
 
                             {errors.role && (
-                                <p className="text-[#D83A52] mt-[0.8rem] text-[1.6rem]">
+                                <p className="text-status-error-red mt-[0.8rem] text-[1.6rem]">
                                     {errors.role.message}
                                 </p>
                             )}
@@ -203,10 +197,10 @@ const EditUserButton = ({ user }: Props) => {
                     <div className="flex flex-col gap-[1.6rem] px-[3.2rem] pb-[3.2rem]">
                         <label
                             htmlFor="email"
-                            className="text-[#616161] text-[1.6rem]"
+                            className="text-text-subtext-gray text-[1.6rem]"
                         >
                             Email
-                            <span className="text-[#D83A52]">*</span>
+                            <span className="text-status-error-red">*</span>
                         </label>
 
                         <Input
@@ -217,21 +211,21 @@ const EditUserButton = ({ user }: Props) => {
                         />
                     </div>
                 </form>
-                <DialogFooter className="bg-[#E7F5FF] p-[3.2rem] gap-[2.4rem] rounded-b-[2.4rem]">
-                    <button
+                <DialogFooter className="bg-fill-highlight-lightest p-[3.2rem] gap-[2.4rem] rounded-b-[2.4rem]">
+                    <Button
                         type="button"
-                        className="text-[#1E76EC] text-[1.6rem]"
+                        className="text-fill-primary  py-[1.85rem] text-[1.6rem] bg-transparent"
                         onClick={() => setEditUserModal(false)}
                     >
                         Cancel
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         form="edit_user_form"
                         type="submit"
-                        className="rounded-[0.8rem] bg-[#1E76EC] px-[5.45rem] py-[1.85rem] text-[#FDFDFD] font-bold text-[1.6rem]"
+                        className="rounded-[0.8rem] px-[4.25rem] py-[1.85rem] text-fill-primary-white font-bold "
                     >
                         Update
-                    </button>
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

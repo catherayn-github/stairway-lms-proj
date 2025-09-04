@@ -30,7 +30,7 @@ const UserHeader = () => {
 
     return (
         <div className="flex justify-between">
-            <h2 className="text-[#303030] text-[1.8rem] font-bold py-[1.75rem]">
+            <h2 className="text-text-primary-black text-[1.8rem] font-bold py-[1.75rem]">
                 Users
             </h2>
 
@@ -41,7 +41,7 @@ const UserHeader = () => {
                         setRoleFilter({ role: value === "All" ? null : value })
                     }
                 >
-                    <SelectTrigger className="text-[#303030] gap-[0.8rem]">
+                    <SelectTrigger className="text-text-primary-black gap-[0.8rem]">
                         <SelectValue placeholder="All Users" />
                     </SelectTrigger>
                     <SelectContent>
@@ -50,7 +50,7 @@ const UserHeader = () => {
                                 <SelectItem
                                     key={role}
                                     value={role}
-                                    className="text-[#595959] text-[1.6rem]"
+                                    className="text-icon-default-black text-[1.6rem]"
                                 >
                                     {role}
                                 </SelectItem>
@@ -61,7 +61,7 @@ const UserHeader = () => {
 
                 <Separator
                     orientation="vertical"
-                    className="bg-[#BBCBD5] h-1/3"
+                    className="bg-stroke-gray h-1/3"
                 />
 
                 <AddUserButton />
