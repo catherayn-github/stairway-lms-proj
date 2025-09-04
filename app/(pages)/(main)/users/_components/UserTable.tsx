@@ -1,8 +1,5 @@
 "use client";
 
-/* REACT */
-import React from "react";
-
 /* LIBRARIES */
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -35,6 +32,7 @@ const UserTable = () => {
         fetchNextPage,
         hasNextPage,
     } = useGetUsers({ filters });
+
     const [
         { sort_name, sort_date_added, sort_added_by, sort_access },
         setSortFilters,
@@ -76,14 +74,16 @@ const UserTable = () => {
                         <TableRow>
                             <TableHead
                                 className="cursor-pointer"
-                                onClick={() =>
+                                onClick={() => {
+                                    console.log(sort_name);
                                     setSortFilters({
-                                        sort_name:
-                                            sort_name === "asc"
+                                        sort_name: sort_name
+                                            ? sort_name === "asc"
                                                 ? "desc"
-                                                : "asc",
-                                    })
-                                }
+                                                : "asc"
+                                            : "desc",
+                                    });
+                                }}
                             >
                                 <div className="flex gap-[1.6rem] items-center">
                                     Name ({users.pages[0].total})
